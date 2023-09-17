@@ -3,6 +3,9 @@ import throttle from 'lodash.throttle';
 const feedbackForm = document.querySelector('.feedback-form');
 const emailInput = document.querySelector('input');
 const messageInput = document.querySelector('textarea');
+const submitButton = document.querySelector('button');
+
+submitButton.disabled = true;
 
 const feedbackFormState = {
   email: '',
@@ -11,26 +14,19 @@ const feedbackFormState = {
 
 function funInput(event) {
   const emailIn = emailInput.value;
-  feedbackFormState.email = emailIn;
-  console.log(feedbackFormState);
-  localStorage.setItem(
-    'feedback-form-state',
-    JSON.stringify(feedbackFormState)
-  );
-}
-
-function funText(event) {
   const messageIn = messageInput.value;
   feedbackFormState.message = messageIn;
-  console.log(feedbackFormState);
+  feedbackFormState.email = emailIn;
+
   localStorage.setItem(
     'feedback-form-state',
     JSON.stringify(feedbackFormState)
   );
+  console.log(feedbackFormState);
+  submitButton.disabled = !(emailInput.value && messageInput.value);
 }
 
-emailInput.addEventListener('input', throttle(funInput, 500));
-messageInput.addEventListener('input', throttle(funText, 500));
+feedbackForm.addEventListener('input', throttle(funInput, 500));
 
 const savedSettings = localStorage.getItem('feedback-form-state');
 const parsedSettings = JSON.parse(savedSettings);
